@@ -6,9 +6,9 @@ PKG_ARCH=$(dpkg --print-architecture)
 PKG_DATE=$(date -R)
 PKG_VERSION=$(cd /src && git describe --tags --abbrev=0 | sed 's/^v//')
 
+PKG_VERSION=$(cd /src && git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')
 if [ -z "$PKG_VERSION" ]; then
-    echo "Error: PKG_VERSION is empty. Did you tag the current commit?"
-    exit 1
+  PKG_VERSION="0.0.1"
 fi
 
 echo "Building Miniflux $PKG_VERSION for $PKG_ARCH"
