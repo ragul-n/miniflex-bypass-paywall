@@ -10,6 +10,8 @@ echo "PKG_DATE=$PKG_DATE"
 
 cd /src
 
+ls
+
 if [ "$PKG_ARCH" = "armhf" ]; then
     make miniflux-no-pie
 else
@@ -38,4 +40,3 @@ lintian --check --color always ../*.deb && \
 mkdir -p /pkg
 cp ../*.deb /pkg/
 
- Error response from daemon: manifest for nragul/miniflex-bypass-paywall:0.0.3 not found: manifest unknown: manifest unknown
