@@ -52,6 +52,7 @@ func CreateFeedFromSubscriptionDiscovery(store *storage.Storage, userID int64, f
 	subscription.Username = feedCreationRequest.Username
 	subscription.Password = feedCreationRequest.Password
 	subscription.Crawler = feedCreationRequest.Crawler
+	subscription.Scrape_from_archive = feedCreationRequest.Scrape_from_archive
 	subscription.Disabled = feedCreationRequest.Disabled
 	subscription.IgnoreHTTPCache = feedCreationRequest.IgnoreHTTPCache
 	subscription.AllowSelfSignedCertificates = feedCreationRequest.AllowSelfSignedCertificates
@@ -151,6 +152,7 @@ func CreateFeed(store *storage.Storage, userID int64, feedCreationRequest *model
 	subscription.Username = feedCreationRequest.Username
 	subscription.Password = feedCreationRequest.Password
 	subscription.Crawler = feedCreationRequest.Crawler
+	subscription.Scrape_from_archive= feedCreationRequest.Scrape_from_archive
 	subscription.Disabled = feedCreationRequest.Disabled
 	subscription.IgnoreHTTPCache = feedCreationRequest.IgnoreHTTPCache
 	subscription.AllowSelfSignedCertificates = feedCreationRequest.AllowSelfSignedCertificates

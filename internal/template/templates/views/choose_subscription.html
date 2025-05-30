@@ -27,6 +27,9 @@
     {{ if .form.Crawler }}
         <input type="hidden" name="crawler" value="1">
     {{ end }}
+    {{ if .form.scrape_from_archive }}
+        <input type="hidden" name="scrape_from_archive" value="1">
+    {{ end }}
     {{ if .form.AllowSelfSignedCertificates }}
         <input type="hidden" name="allow_self_signed_certificates" value="1">
     {{ end }}

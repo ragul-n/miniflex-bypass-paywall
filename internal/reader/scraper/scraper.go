@@ -8,6 +8,8 @@ import (
 	"io"
 	"log/slog"
 	"strings"
+	"math/rand"
+    "time"
 
 	"miniflux.app/v2/internal/config"
 	"miniflux.app/v2/internal/reader/encoding"
@@ -18,13 +20,48 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeWebsite(requestBuilder *fetcher.RequestBuilder, pageURL, rules string) (baseURL string, extractedContent string, err error) {
+func ScrapeWebsite(requestBuilder *fetcher.RequestBuilder, pageURL, rules string, scrape_from_archive bool) (baseURL string, extractedContent string, err error) {
+	if scrape_from_archive {
+
+		// Seed the random number generator
+		rand.Seed(time.Now().UnixNano())
+
+		// Available archive domains
+		domains := []string{"fo", "is", "li", "md", "ph", "vn"}
+	
+		// Pick one domain randomly
+		selectedDomain := domains[rand.Intn(len(domains))]
+	
+		// Construct the URL
+		pageURL = "https://www.archive." + selectedDomain + "/latest/" + pageURL
+	}
 	responseHandler := fetcher.NewResponseHandler(requestBuilder.ExecuteRequest(pageURL))
 	defer responseHandler.Close()
 
 	if localizedError := responseHandler.LocalizedError(); localizedError != nil {
-		slog.Warn("Unable to scrape website", slog.String("website_url", pageURL), slog.Any("error", localizedError.Error()))
-		return "", "", localizedError.Error()
+			// Log Retry-After or related rate limit headers if 429 status code is returned
+			// if responseHandler.StatusCode() == 429 {
+			// 	retryAfter := responseHandler.Header().Get("Retry-After")
+			// 	slog.Warn("Received 429 Too Many Requests",
+			// 		slog.String("website_url", pageURL),
+			// 		slog.String("retry_after", retryAfter),
+			// 		slog.Any("error", localizedError.Error()),
+			// 	)
+			// } else {
+			// 	slog.Warn("Unable to scrape website",
+			// 		slog.String("website_url", pageURL),
+			// 		slog.Any("error", localizedError.Error()),
+			// 	)
+			// }
+			
+			slog.Warn("Unable to scrape website",
+				slog.String("website_url", pageURL),
+				slog.Any("error", localizedError.Error()),
+			)
+
+			return "", "", localizedError.Error()
+
+
 	}
 
 	if !isAllowedContentType(responseHandler.ContentType()) {
@@ -32,7 +69,7 @@ func ScrapeWebsite(requestBuilder *fetcher.RequestBuilder, pageURL, rules string
 	}
 
 	// The entry URL could redirect somewhere else.
-	sameSite := urllib.Domain(pageURL) == urllib.Domain(responseHandler.EffectiveURL())
+	// sameSite := urllib.Domain(pageURL) == urllib.Domain(responseHandler.EffectiveURL())
 	pageURL = responseHandler.EffectiveURL()
 
 	if rules == "" {
@@ -48,7 +85,7 @@ func ScrapeWebsite(requestBuilder *fetcher.RequestBuilder, pageURL, rules string
 		return "", "", fmt.Errorf("scraper: unable to read HTML document with charset reader: %v", err)
 	}
 
-	if sameSite && rules != "" {
+	if rules != "" {
 		slog.Debug("Extracting content with custom rules",
 			"url", pageURL,
 			"rules", rules,

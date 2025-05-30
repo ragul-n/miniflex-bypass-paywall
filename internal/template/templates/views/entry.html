@@ -84,6 +84,14 @@
                         data-original-link="{{ .user.MarkReadOnView }}">{{ icon "external-link" }}<span class="icon-label">{{ t "entry.external_link.label" }}</span></a>
                 </li>
                 <li>
+                    <a href="https://archive.is/latest/{{ .entry.URL | safeURL }}"
+                        class="page-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        referrerpolicy="no-referrer"
+                        data-original-link="{{ .user.MarkReadOnView }}">{{ icon "external-link" }}<span class="icon-label">archive</span></a>
+                </li>
+                <li>
                     <button
                         class="page-button"
                         title="{{ t "entry.scraper.title" }}"

@@ -40,11 +40,11 @@ const (
 	defaultSchedulerRoundRobinMaxInterval     = 1440
 	defaultPollingParsingErrorLimit           = 3
 	defaultRunMigrations                      = false
-	defaultDatabaseURL                        = "user=postgres password=postgres dbname=miniflux2 sslmode=disable"
+	defaultDatabaseURL                        = "user=postgres password=postgres dbname=miniflux2 port=15432 sslmode=disable"
 	defaultDatabaseMaxConns                   = 20
 	defaultDatabaseMinConns                   = 1
 	defaultDatabaseConnectionLifetime         = 5
-	defaultListenAddr                         = "127.0.0.1:8080"
+	defaultListenAddr                         = "127.0.0.1:8009"
 	defaultCertFile                           = ""
 	defaultKeyFile                            = ""
 	defaultCertDomain                         = ""

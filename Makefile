@@ -5,7 +5,7 @@ COMMIT          := $(shell git rev-parse --short HEAD 2>/dev/null)
 BUILD_DATE      := `date +%FT%T%z`
 LD_FLAGS        := "-s -w -X 'miniflux.app/v2/internal/version.Version=$(VERSION)' -X 'miniflux.app/v2/internal/version.Commit=$(COMMIT)' -X 'miniflux.app/v2/internal/version.BuildDate=$(BUILD_DATE)'"
 PKG_LIST        := $(shell go list ./... | grep -v /vendor/)
-DB_URL          := postgres://postgres:postgres@localhost/miniflux_test?sslmode=disable
+DB_URL          := postgres://postgres:postgres@localhost:15432/miniflux2?sslmode=disable
 DOCKER_PLATFORM := amd64
 
 export PGPASSWORD := postgres
@@ -149,7 +149,7 @@ integration-test:
 
 	while ! nc -z localhost 8080; do sleep 1; done
 
-	TEST_MINIFLUX_BASE_URL=http://127.0.0.1:8080 \
+	TEST_MINIFLUX_BASE_URL=http://127.0.0.1:8000 \
 	TEST_MINIFLUX_ADMIN_USERNAME=admin \
 	TEST_MINIFLUX_ADMIN_PASSWORD=test123 \
 	go test -v -count=1 ./internal/api

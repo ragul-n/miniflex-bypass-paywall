@@ -16,6 +16,7 @@ type SubscriptionForm struct {
 	URL                         string
 	CategoryID                  int64
 	Crawler                     bool
+	Scrape_from_archive         bool
 	FetchViaProxy               bool
 	AllowSelfSignedCertificates bool
 	UserAgent                   string
@@ -71,6 +72,7 @@ func NewSubscriptionForm(r *http.Request) *SubscriptionForm {
 		URL:                         r.FormValue("url"),
 		CategoryID:                  int64(categoryID),
 		Crawler:                     r.FormValue("crawler") == "1",
+		Scrape_from_archive:         r.FormValue("scrape_from_archive")=="1",
 		AllowSelfSignedCertificates: r.FormValue("allow_self_signed_certificates") == "1",
 		FetchViaProxy:               r.FormValue("fetch_via_proxy") == "1",
 		UserAgent:                   r.FormValue("user_agent"),

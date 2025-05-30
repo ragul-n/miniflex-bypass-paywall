@@ -230,6 +230,7 @@ func (s *Storage) CreateFeed(feed *model.Feed) error {
 			etag_header,
 			last_modified_header,
 			crawler,
+			scrape_from_archive,
 			user_agent,
 			cookie,
 			username,
@@ -252,7 +253,7 @@ func (s *Storage) CreateFeed(feed *model.Feed) error {
 			proxy_url
 		)
 		VALUES
-			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
+			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29)
 		RETURNING
 			id
 	`
@@ -266,6 +267,7 @@ func (s *Storage) CreateFeed(feed *model.Feed) error {
 		feed.EtagHeader,
 		feed.LastModifiedHeader,
 		feed.Crawler,
+		feed.Scrape_from_archive,
 		feed.UserAgent,
 		feed.Cookie,
 		feed.Username,
@@ -345,30 +347,31 @@ func (s *Storage) UpdateFeed(feed *model.Feed) (err error) {
 			blocklist_rules=$12,
 			keeplist_rules=$13,
 			crawler=$14,
-			user_agent=$15,
-			cookie=$16,
-			username=$17,
-			password=$18,
-			disabled=$19,
-			next_check_at=$20,
-			ignore_http_cache=$21,
-			allow_self_signed_certificates=$22,
-			fetch_via_proxy=$23,
-			hide_globally=$24,
-			url_rewrite_rules=$25,
-			no_media_player=$26,
-			apprise_service_urls=$27,
-			webhook_url=$28,
-			disable_http2=$29,
-			description=$30,
-			ntfy_enabled=$31,
-			ntfy_priority=$32,
-			ntfy_topic=$33,
-			pushover_enabled=$34,
-			pushover_priority=$35,
-			proxy_url=$36
+			scrape_from_archive=$15,
+			user_agent=$16,
+			cookie=$17,
+			username=$18,
+			password=$19,
+			disabled=$20,
+			next_check_at=$21,
+			ignore_http_cache=$22,
+			allow_self_signed_certificates=$23,
+			fetch_via_proxy=$24,
+			hide_globally=$25,
+			url_rewrite_rules=$26,
+			no_media_player=$27,
+			apprise_service_urls=$28,
+			webhook_url=$29,
+			disable_http2=$30,
+			description=$31,
+			ntfy_enabled=$32,
+			ntfy_priority=$33,
+			ntfy_topic=$34,
+			pushover_enabled=$35,
+			pushover_priority=$36,
+			proxy_url=$37
 		WHERE
-			id=$37 AND user_id=$38
+			id=$38 AND user_id=$39
 	`
 	_, err = s.db.Exec(query,
 		feed.FeedURL,
@@ -385,6 +388,7 @@ func (s *Storage) UpdateFeed(feed *model.Feed) (err error) {
 		feed.BlocklistRules,
 		feed.KeeplistRules,
 		feed.Crawler,
+		feed.Scrape_from_archive,
 		feed.UserAgent,
 		feed.Cookie,
 		feed.Username,

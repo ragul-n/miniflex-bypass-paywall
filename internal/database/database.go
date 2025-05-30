@@ -30,6 +30,7 @@ func Migrate(db *sql.DB) error {
 		}
 
 		if err := migrations[version](tx, driver); err != nil {
+			fmt.Println("from here")
 			tx.Rollback()
 			return fmt.Errorf("[Migration v%d] %v", newVersion, err)
 		}
