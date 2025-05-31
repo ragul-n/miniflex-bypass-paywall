@@ -37,6 +37,5 @@ echo " -- Frédéric Guillot <f@miniflux.net>  $PKG_DATE" >> /build/debian/chang
 sed "s/__PKG_ARCH__/${PKG_ARCH}/g" /src/packaging/debian/control > /build/debian/control && \
 dpkg-buildpackage -us -uc -b && \
 lintian --check --color always ../*.deb && \
-mkdir -p /pkg
 cp ../*.deb /pkg/
 
