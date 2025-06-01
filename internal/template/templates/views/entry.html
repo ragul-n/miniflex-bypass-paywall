@@ -180,7 +180,15 @@
 </div>
 {{ end }}
 {{ end }}
-<article class="entry-content {{ if ne $.user.GestureNav "none" }}gesture-nav-{{ $.user.GestureNav }}{{ end }}" dir="auto">
+
+{{- $fetch := "none" -}}
+{{- if .entry.Feed.FetchFromOriginal -}}
+  {{- $fetch = "original" -}}
+{{- else if .entry.Feed.FetchFromArchive -}}
+  {{- $fetch = "archive" -}}
+{{- end }}
+
+<article class="entry-content {{ if ne $.user.GestureNav "none" }}gesture-nav-{{ $.user.GestureNav }}{{ end }}" dir="auto" data-fetch="{{ $fetch }}">
     {{ if not .entry.Feed.NoMediaPlayer }}
         {{ $mediaPlayerEnclosure := .entry.Enclosures.FindMediaPlayerEnclosure }}
 

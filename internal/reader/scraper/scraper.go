@@ -8,8 +8,6 @@ import (
 	"io"
 	"log/slog"
 	"strings"
-	"math/rand"
-    "time"
 
 	"miniflux.app/v2/internal/config"
 	"miniflux.app/v2/internal/reader/encoding"
@@ -20,21 +18,8 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeWebsite(requestBuilder *fetcher.RequestBuilder, pageURL, rules string, scrape_from_archive bool) (baseURL string, extractedContent string, err error) {
-	if scrape_from_archive {
-
-		// Seed the random number generator
-		rand.Seed(time.Now().UnixNano())
-
-		// Available archive domains
-		domains := []string{"fo", "is", "li", "md", "ph", "vn"}
+func ScrapeWebsite(requestBuilder *fetcher.RequestBuilder, pageURL, rules string) (baseURL string, extractedContent string, err error) {
 	
-		// Pick one domain randomly
-		selectedDomain := domains[rand.Intn(len(domains))]
-	
-		// Construct the URL
-		pageURL = "https://www.archive." + selectedDomain + "/latest/" + pageURL
-	}
 	responseHandler := fetcher.NewResponseHandler(requestBuilder.ExecuteRequest(pageURL))
 	defer responseHandler.Close()
 

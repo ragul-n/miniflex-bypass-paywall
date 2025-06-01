@@ -190,11 +190,7 @@ var migrations = []func(tx *sql.Tx, driver string) error{
 		_, err = tx.Exec(sql)
 		return err
 	},
-	// func(tx *sql.Tx, _ string) (err error) {
-	// 	sql := `ALTER TABLE feeds ADD COLUMN scrape_from_archive default 'f'`
-	// 	_, err = tx.Exec(sql)
-	// 	return err
-	// },
+
 	func(tx *sql.Tx, _ string) (err error) {
 		sql := `ALTER TABLE sessions rename to user_sessions`
 		_, err = tx.Exec(sql)
@@ -1084,7 +1080,13 @@ var migrations = []func(tx *sql.Tx, driver string) error{
 	},
 
 	func(tx *sql.Tx, _ string) (err error) {
-		sql := `ALTER TABLE feeds ADD COLUMN scrape_from_archive boolean default 'f'`
+		sql := `ALTER TABLE feeds ADD COLUMN fetch_from_original boolean default 'f'`
+		_, err = tx.Exec(sql)
+		return err
+	},
+
+	func(tx *sql.Tx, _ string) (err error) {
+		sql := `ALTER TABLE feeds ADD COLUMN fetch_from_archive boolean default 'f'`
 		_, err = tx.Exec(sql)
 		return err
 	},

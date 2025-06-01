@@ -90,7 +90,6 @@ func ProcessFeedEntries(store *storage.Storage, feed *model.Feed, userID int64, 
 				requestBuilder,
 				rewrittenURL,
 				feed.ScraperRules,
-				feed.Scrape_from_archive,
 			)
 
 			if scrapedPageBaseURL != "" {
@@ -160,7 +159,6 @@ func ProcessEntryWebPage(feed *model.Feed, entry *model.Entry, user *model.User)
 		requestBuilder,
 		rewrittenEntryURL,
 		feed.ScraperRules,
-		feed.Scrape_from_archive,
 	)
 
 	if config.Opts.HasMetricsCollector() {

@@ -288,7 +288,8 @@ func (e *EntryQueryBuilder) GetEntries() (model.Entries, error) {
 			f.scraper_rules,
 			f.rewrite_rules,
 			f.crawler,
-			f.scrape_from_archive,
+			f.fetch_from_original,
+			f.fetch_from_archive,
 			f.user_agent,
 			f.cookie,
 			f.hide_globally,
@@ -317,6 +318,8 @@ func (e *EntryQueryBuilder) GetEntries() (model.Entries, error) {
 
 	rows, err := e.store.db.Query(query, e.args...)
 	if err != nil {
+		// query := `ALTER TABLE feeds ADD COLUMN fetch_from_original boolean default 'f'`
+		// _, err := e.store.db.Query(query)
 		return nil, fmt.Errorf("store: unable to get entries: %v", err)
 	}
 	defer rows.Close()
@@ -361,7 +364,8 @@ func (e *EntryQueryBuilder) GetEntries() (model.Entries, error) {
 			&entry.Feed.ScraperRules,
 			&entry.Feed.RewriteRules,
 			&entry.Feed.Crawler,
-			&entry.Feed.Scrape_from_archive,
+			&entry.Feed.FetchFromOriginal,
+			&entry.Feed.FetchFromArchive,
 			&entry.Feed.UserAgent,
 			&entry.Feed.Cookie,
 			&entry.Feed.HideGlobally,

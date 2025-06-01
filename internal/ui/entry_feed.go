@@ -51,7 +51,7 @@ func (h *handler) showFeedEntryPage(w http.ResponseWriter, r *http.Request) {
 		entry.Status = model.EntryStatusRead
 	}
 
-	if user.AlwaysOpenExternalLinks {
+if user.AlwaysOpenExternalLinks {
 		html.Redirect(w, r, entry.URL)
 		return
 	}

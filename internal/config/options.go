@@ -44,7 +44,7 @@ const (
 	defaultDatabaseMaxConns                   = 20
 	defaultDatabaseMinConns                   = 1
 	defaultDatabaseConnectionLifetime         = 5
-	defaultListenAddr                         = "127.0.0.1:8000"
+	defaultListenAddr                         = "127.0.0.1:8014"
 	defaultCertFile                           = ""
 	defaultKeyFile                            = ""
 	defaultCertDomain                         = ""

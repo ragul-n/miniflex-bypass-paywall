@@ -27,8 +27,11 @@
     {{ if .form.Crawler }}
         <input type="hidden" name="crawler" value="1">
     {{ end }}
-    {{ if .form.scrape_from_archive }}
-        <input type="hidden" name="scrape_from_archive" value="1">
+    {{ if .form.FetchFromOriginal }}
+        <input type="hidden" name="fetch_from_orginal" value="1">
+    {{ end }}
+    {{ if .form.FetchFromArchive }}
+        <input type="hidden" name="fetch_from_archive" value="1">
     {{ end }}
     {{ if .form.AllowSelfSignedCertificates }}
         <input type="hidden" name="allow_self_signed_certificates" value="1">

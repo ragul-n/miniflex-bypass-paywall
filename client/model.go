@@ -161,7 +161,8 @@ type Feed struct {
 	BlocklistRules              string    `json:"blocklist_rules"`
 	KeeplistRules               string    `json:"keeplist_rules"`
 	Crawler                     bool      `json:"crawler"`
-	Scrape_from_archive	        bool      `json:"scrape_from_archive"`
+	FetchFromOriginal			bool      `json:"fetch_from_original"`
+	FetchFromArchive	        bool      `json:"fetch_from_archive"`
 	UserAgent                   string    `json:"user_agent"`
 	Cookie                      string    `json:"cookie"`
 	Username                    string    `json:"username"`
@@ -181,7 +182,8 @@ type FeedCreationRequest struct {
 	Username                    string `json:"username"`
 	Password                    string `json:"password"`
 	Crawler                     bool   `json:"crawler"`
-	Scrape_from_archive	        bool   `json:"scrape_from_archive"`
+	FetchFromOriginal           bool   `json:"fetch_from_original"`
+	FetchFromArchive	        bool   `json:"fetch_from_archive"`
 	Disabled                    bool   `json:"disabled"`
 	IgnoreHTTPCache             bool   `json:"ignore_http_cache"`
 	AllowSelfSignedCertificates bool   `json:"allow_self_signed_certificates"`
@@ -205,7 +207,8 @@ type FeedModificationRequest struct {
 	BlocklistRules              *string `json:"blocklist_rules"`
 	KeeplistRules               *string `json:"keeplist_rules"`
 	Crawler                     *bool   `json:"crawler"`
-	Scrape_from_archive	        *bool   `json:"scrape_from_archive"`
+	FetchFromOriginal        	*bool   `json:"fetch_from_original"`
+	FetchFromArchive	        *bool   `json:"fetch_from_archive"`
 	UserAgent                   *string `json:"user_agent"`
 	Cookie                      *string `json:"cookie"`
 	Username                    *string `json:"username"`
