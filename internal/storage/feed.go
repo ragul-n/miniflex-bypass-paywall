@@ -291,7 +291,7 @@ func (s *Storage) CreateFeed(feed *model.Feed) error {
 		feed.DisableHTTP2,
 		feed.Description,
 		feed.ProxyURL,
-		feed.Priority
+		feed.Priority,
 	).Scan(&feed.ID)
 	if err != nil {
 		return fmt.Errorf(`store: unable to create feed %q: %v`, feed.FeedURL, err)
@@ -418,7 +418,7 @@ func (s *Storage) UpdateFeed(feed *model.Feed) (err error) {
 		feed.PushoverEnabled,
 		feed.PushoverPriority,
 		feed.ProxyURL,
-		feed.Priority
+		feed.Priority,
 		feed.ID,
 		feed.UserID,
 	)

@@ -95,6 +95,11 @@ func NewFeedForm(r *http.Request) *FeedForm {
 		categoryID = 0
 	}
 
+	Priority, err := strconv.Atoi(r.FormValue("priority"))
+	if err != nil {
+		Priority = 0
+	}
+
 	ntfyPriority, err := strconv.Atoi(r.FormValue("ntfy_priority"))
 	if err != nil {
 		ntfyPriority = 0
@@ -138,6 +143,6 @@ func NewFeedForm(r *http.Request) *FeedForm {
 		PushoverEnabled:             r.FormValue("pushover_enabled") == "1",
 		PushoverPriority:            pushoverPriority,
 		ProxyURL:                    r.FormValue("proxy_url"),
-		Priority:                    r.FormValue("priority")
+		Priority:                    int64(Priority),
 	}
 }

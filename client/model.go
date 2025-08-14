@@ -223,7 +223,7 @@ type FeedModificationRequest struct {
 	HideGlobally                *bool   `json:"hide_globally"`
 	DisableHTTP2                *bool   `json:"disable_http2"`
 	ProxyURL                    *string `json:"proxy_url"`
-	Priority                   int64    `json:"priority"`
+	Priority                    *int64    `json:"priority"`
 }
 
 // FeedIcon represents the feed icon.

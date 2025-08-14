@@ -174,7 +174,7 @@ type FeedCreationRequest struct {
 	UrlRewriteRules             string `json:"urlrewrite_rules"`
 	DisableHTTP2                bool   `json:"disable_http2"`
 	ProxyURL                    string `json:"proxy_url"`
-	priority                    int64   `json:"priority"`
+	Priority                    int64   `json:"priority"`
 }		
 
 type FeedCreationRequestFromSubscriptionDiscovery struct {

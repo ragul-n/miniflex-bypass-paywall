@@ -56,6 +56,12 @@ func (h *handler) showUnreadPage(w http.ResponseWriter, r *http.Request) {
 	}
 	finishSqlFetchUnreadEntries := time.Now()
 
+	categories, err := h.store.CategoriesWithFeedCount(user.ID)
+	if err != nil {
+		html.ServerError(w, r, err)
+		return
+	}
+
 	sess := session.New(h.store, request.SessionID(r))
 	view := view.New(h.tpl, r, sess)
 	view.Set("entries", entries)
@@ -65,6 +71,7 @@ func (h *handler) showUnreadPage(w http.ResponseWriter, r *http.Request) {
 	view.Set("countUnread", countUnread)
 	view.Set("countErrorFeeds", h.store.CountUserFeedsWithErrors(user.ID))
 	view.Set("hasSaveEntry", h.store.HasSaveEntry(user.ID))
+	view.Set("categories", categories)
 
 	finishPreProcessing := time.Now()
 

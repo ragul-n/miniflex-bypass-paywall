@@ -258,7 +258,7 @@ func (f *FeedQueryBuilder) GetFeeds() (model.Feeds, error) {
 			&feed.PushoverEnabled,
 			&feed.PushoverPriority,
 			&feed.ProxyURL,
-			&feed.Priority
+			&feed.Priority,
 		)
 
 		if err != nil {
