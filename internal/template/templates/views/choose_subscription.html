@@ -21,6 +21,8 @@
     <input type="hidden" name="keeplist_rules" value="{{ .form.KeeplistRules }}">
     <input type="hidden" name="urlrewrite_rules" value="{{ .form.UrlRewriteRules }}">
     <input type="hidden" name="proxy_url" value="{{ .form.ProxyURL }}">
+    <input type="hidden" name="priority" value="{{ .form.Priority }}">
+
     {{ if .form.FetchViaProxy }}
     <input type="hidden" name="fetch_via_proxy" value="1">
     {{ end }}

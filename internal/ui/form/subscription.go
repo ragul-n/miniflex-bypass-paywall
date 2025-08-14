@@ -31,6 +31,7 @@ type SubscriptionForm struct {
 	UrlRewriteRules             string
 	DisableHTTP2                bool
 	ProxyURL                    string
+	priority                    int64
 }
 
 // Validate makes sure the form values locale.are valid.
@@ -88,5 +89,6 @@ func NewSubscriptionForm(r *http.Request) *SubscriptionForm {
 		UrlRewriteRules:             r.FormValue("urlrewrite_rules"),
 		DisableHTTP2:                r.FormValue("disable_http2") == "1",
 		ProxyURL:                    r.FormValue("proxy_url"),
+		Priority:                    r.FormValue("priority")
 	}
 }

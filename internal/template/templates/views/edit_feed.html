@@ -73,6 +73,7 @@
             <label><input type="checkbox" name="no_media_player" {{ if .form.NoMediaPlayer }}checked{{ end }} value="1" >  {{ t "form.feed.label.no_media_player" }} </label>
             <label><input type="checkbox" name="disabled" value="1" {{ if .form.Disabled }}checked{{ end }}> {{ t "form.feed.label.disabled" }}</label>
 
+
             <div class="buttons">
                 <button type="submit" class="button button-primary" data-label-loading="{{ t "form.submit.saving" }}">{{ t "action.update" }}</button>
             </div>
@@ -102,6 +103,9 @@
 
             <label for="form-cookie">{{ t "form.feed.label.cookie" }}</label>
             <input type="text" name="cookie" id="form-cookie" value="{{ .form.Cookie }}" spellcheck="false">
+
+            <label for="form-priority">{{ t "form.feed.label.priority" }}</label>
+            <input type="number" name="priority" id="form-proxy-url" value="{{ .form.Priority }}" step="1" spellcheck="false">
 
             <label><input type="checkbox" name="crawler" value="1" {{ if .form.Crawler }}checked{{ end }}> {{ t "form.feed.label.crawler" }}</label>
             <label><input type="checkbox" name="fetch_from_original" value="1" {{ if .form.FetchFromOriginal }}checked{{ end }}> {{ t "form.feed.label.fetch_from_original" }}</label>

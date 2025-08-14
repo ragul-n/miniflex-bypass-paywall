@@ -293,6 +293,7 @@ function updateEntriesStatus(entryIDs, status, callback) {
     request.execute();
 }
 
+
 // Handle save entry from list view and entry view.
 function handleSaveEntry(element) {
     const toasting = !element;
@@ -301,6 +302,7 @@ function handleSaveEntry(element) {
         saveEntry(currentEntry.querySelector(":is(a, button)[data-save-entry]"), toasting);
     }
 }
+
 
 // Send the Ajax request to save an entry.
 function saveEntry(element, toasting) {

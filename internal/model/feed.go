@@ -62,7 +62,7 @@ type Feed struct {
 	PushoverEnabled             bool      `json:"pushover_enabled"`
 	PushoverPriority            int       `json:"pushover_priority"`
 	ProxyURL                    string    `json:"proxy_url"`
-
+	Priority					int64	  `json:"priority"`
 	// Non-persisted attributes
 	Category *Category `json:"category,omitempty"`
 	Icon     *FeedIcon `json:"icon"`
@@ -174,7 +174,8 @@ type FeedCreationRequest struct {
 	UrlRewriteRules             string `json:"urlrewrite_rules"`
 	DisableHTTP2                bool   `json:"disable_http2"`
 	ProxyURL                    string `json:"proxy_url"`
-}
+	priority                    int64   `json:"priority"`
+}		
 
 type FeedCreationRequestFromSubscriptionDiscovery struct {
 	Content      io.ReadSeeker
@@ -211,7 +212,8 @@ type FeedModificationRequest struct {
 	HideGlobally                *bool   `json:"hide_globally"`
 	DisableHTTP2                *bool   `json:"disable_http2"`
 	ProxyURL                    *string `json:"proxy_url"`
-}
+	Priority                    *int64  `josn:"priority"`
+}	
 
 // Patch updates a feed with modified values.
 func (f *FeedModificationRequest) Patch(feed *Feed) {
@@ -313,6 +315,10 @@ func (f *FeedModificationRequest) Patch(feed *Feed) {
 
 	if f.ProxyURL != nil {
 		feed.ProxyURL = *f.ProxyURL
+	}
+
+	if f.Priority != nil {
+		feed.Priority = *f.Priority
 	}
 }
 

@@ -171,6 +171,7 @@ type Feed struct {
 	HideGlobally                bool      `json:"hide_globally"`
 	DisableHTTP2                bool      `json:"disable_http2"`
 	ProxyURL                    string    `json:"proxy_url"`
+	Priority                   int64      `json:"priority"`
 }
 
 // FeedCreationRequest represents the request to create a feed.
@@ -195,6 +196,7 @@ type FeedCreationRequest struct {
 	HideGlobally                bool   `json:"hide_globally"`
 	DisableHTTP2                bool   `json:"disable_http2"`
 	ProxyURL                    string `json:"proxy_url"`
+	Priority                    int64  `json:"priority"`
 }
 
 // FeedModificationRequest represents the request to update a feed.
@@ -221,6 +223,7 @@ type FeedModificationRequest struct {
 	HideGlobally                *bool   `json:"hide_globally"`
 	DisableHTTP2                *bool   `json:"disable_http2"`
 	ProxyURL                    *string `json:"proxy_url"`
+	Priority                   int64    `json:"priority"`
 }
 
 // FeedIcon represents the feed icon.

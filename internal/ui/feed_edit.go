@@ -73,6 +73,7 @@ func (h *handler) showEditFeedPage(w http.ResponseWriter, r *http.Request) {
 		PushoverEnabled:             feed.PushoverEnabled,
 		PushoverPriority:            feed.PushoverPriority,
 		ProxyURL:                    feed.ProxyURL,
+		Priority:                    feed.Priority,
 	}
 
 	sess := session.New(h.store, request.SessionID(r))

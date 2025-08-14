@@ -318,8 +318,8 @@ func (e *EntryQueryBuilder) GetEntries() (model.Entries, error) {
 
 	rows, err := e.store.db.Query(query, e.args...)
 	if err != nil {
-		// query := `ALTER TABLE feeds ADD COLUMN fetch_from_original boolean default 'f'`
-		// _, err := e.store.db.Query(query)
+		query := `ALTER TABLE feeds ADD COLUMN fetch_from_original boolean default 'f'`
+		_, err := e.store.db.Query(query)
 		return nil, fmt.Errorf("store: unable to get entries: %v", err)
 	}
 	defer rows.Close()

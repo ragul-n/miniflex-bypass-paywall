@@ -1091,4 +1091,10 @@ var migrations = []func(tx *sql.Tx, driver string) error{
 		return err
 	},
 
+	func(tx *sql.Tx, _ string) (err error) {
+		sql := `ALTER TABLE feeds ADD COLUMN priority  INT NOT NULL DEFAULT 0`
+		_, err = tx.Exec(sql)
+		return err
+	},
+
 }

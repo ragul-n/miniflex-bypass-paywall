@@ -106,6 +106,7 @@ func Serve(router *mux.Router, store *storage.Storage, pool *worker.Pool) {
 	uiRouter.HandleFunc("/entry/download/{entryID}", handler.fetchContent).Name("fetchContent").Methods(http.MethodPost)
 	uiRouter.HandleFunc("/proxy/{encodedDigest}/{encodedURL}", handler.mediaProxy).Name("proxy").Methods(http.MethodGet)
 	uiRouter.HandleFunc("/entry/bookmark/{entryID}", handler.toggleBookmark).Name("toggleBookmark").Methods(http.MethodPost)
+	uiRouter.HandleFunc("/entry.")
 
 	// Share pages.
 	uiRouter.HandleFunc("/entry/share/{entryID}", handler.createSharedEntry).Name("shareEntry").Methods(http.MethodPost)
@@ -168,6 +169,9 @@ func Serve(router *mux.Router, store *storage.Storage, pool *worker.Pool) {
 	uiRouter.HandleFunc("/webauthn/{credentialHandle}/delete", handler.deleteCredential).Name("webauthnDelete").Methods(http.MethodPost)
 	uiRouter.HandleFunc("/webauthn/{credentialHandle}/rename", handler.renameCredential).Name("webauthnRename").Methods(http.MethodGet)
 	uiRouter.HandleFunc("/webauthn/{credentialHandle}/save", handler.saveCredential).Name("webauthnSave").Methods(http.MethodPost)
+
+	// reader-mode
+	uiRouter.HandleFunc("/reader-mode/{url}", handler.ReaderMode).Name("readerMode").Methods(http.MethodGet)
 
 	router.HandleFunc("/robots.txt", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")

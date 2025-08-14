@@ -41,6 +41,9 @@
                 <label><input type="checkbox" name="fetch_via_proxy" value="1" {{ if .form.FetchViaProxy }}checked{{ end }}> {{ t "form.feed.label.fetch_via_proxy" }}</label>
                 {{ end }}
 
+                <label for="form-priority">{{ t "form.feed.label.priority" }}</label>
+                <input type="number" name="priority" id="priority" value="{{ .form.Priority }}" step="1" spellcheck="false">
+
                 <label for="form-proxy-url">{{ t "form.feed.label.proxy_url" }}</label>
                 <input type="url" name="proxy_url" id="form-proxy-url" value="{{ .form.ProxyURL }}" spellcheck="false">
 
