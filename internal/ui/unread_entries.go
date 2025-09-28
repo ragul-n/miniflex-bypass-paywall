@@ -41,12 +41,17 @@ func (h *handler) showUnreadPage(w http.ResponseWriter, r *http.Request) {
 		offset = 0
 	}
 
+	n := 5 // last 5 days
+	date := time.Now().AddDate(0, 0, -n)
+
 	beginSqlFetchUnreadEntries := time.Now()
 	builder = h.store.NewEntryQueryBuilder(user.ID)
 	builder.WithStatus(model.EntryStatusUnread)
+	builder.WithSorting("priority", "DESC")
 	builder.WithSorting(user.EntryOrder, user.EntryDirection)
 	builder.WithSorting("id", user.EntryDirection)
 	builder.WithOffset(offset)
+	builder.AfterPublishedDate(date)
 	builder.WithLimit(user.EntriesPerPage)
 	builder.WithGloballyVisible()
 	entries, err := builder.GetEntries()

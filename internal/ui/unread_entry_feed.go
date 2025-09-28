@@ -54,6 +54,7 @@ func (h *handler) showUnreadFeedEntryPage(w http.ResponseWriter, r *http.Request
 	entryPaginationBuilder := storage.NewEntryPaginationBuilder(h.store, user.ID, entry.ID, user.EntryOrder, user.EntryDirection)
 	entryPaginationBuilder.WithFeedID(feedID)
 	entryPaginationBuilder.WithStatus(model.EntryStatusUnread)
+	entryPaginationBuilder.WithPriority()
 
 	if entry.Status == model.EntryStatusRead {
 		err = h.store.SetEntriesStatus(user.ID, []int64{entry.ID}, model.EntryStatusUnread)

@@ -723,7 +723,7 @@ func (h *handler) streamItemContentsHandler(w http.ResponseWriter, r *http.Reque
 	builder.WithEnclosures()
 	builder.WithoutStatus(model.EntryStatusRemoved)
 	builder.WithEntryIDs(itemIDs)
-	builder.WithSorting("priority", "DESC")
+	// builder.WithSorting("priority", "DESC")
 	builder.WithSorting(model.DefaultSortingOrder, requestModifiers.SortDirection)
 
 	entries, err := builder.GetEntries()
@@ -1101,7 +1101,7 @@ func (h *handler) handleReadingListStreamHandler(w http.ResponseWriter, r *http.
 	builder.WithoutStatus(model.EntryStatusRemoved)
 	builder.WithLimit(rm.Count)
 	builder.WithOffset(rm.Offset)
-	builder.WithSorting("priority", "DESC")
+	// builder.WithSorting("priority", "DESC")
 	builder.WithSorting(model.DefaultSortingOrder, rm.SortDirection)
 	if rm.StartTime > 0 {
 		builder.AfterPublishedDate(time.Unix(rm.StartTime, 0))
@@ -1140,7 +1140,7 @@ func (h *handler) handleStarredStreamHandler(w http.ResponseWriter, r *http.Requ
 	builder.WithStarred(true)
 	builder.WithLimit(rm.Count)
 	builder.WithOffset(rm.Offset)
-	builder.WithSorting("priority", "DESC")
+	// builder.WithSorting("priority", "DESC")
 	builder.WithSorting(model.DefaultSortingOrder, rm.SortDirection)
 	if rm.StartTime > 0 {
 		builder.AfterPublishedDate(time.Unix(rm.StartTime, 0))
@@ -1179,7 +1179,7 @@ func (h *handler) handleReadStreamHandler(w http.ResponseWriter, r *http.Request
 	builder.WithStatus(model.EntryStatusRead)
 	builder.WithLimit(rm.Count)
 	builder.WithOffset(rm.Offset)
-	builder.WithSorting("priority", "DESC")
+	// builder.WithSorting("priority", "DESC")
 	builder.WithSorting(model.DefaultSortingOrder, rm.SortDirection)
 	if rm.StartTime > 0 {
 		builder.AfterPublishedDate(time.Unix(rm.StartTime, 0))
@@ -1224,7 +1224,7 @@ func (h *handler) handleFeedStreamHandler(w http.ResponseWriter, r *http.Request
 	builder.WithFeedID(feedID)
 	builder.WithLimit(rm.Count)
 	builder.WithOffset(rm.Offset)
-	builder.WithSorting("priority", "DESC")
+	// builder.WithSorting("priority", "DESC")
 	builder.WithSorting(model.DefaultSortingOrder, rm.SortDirection)
 
 	if rm.StartTime > 0 {

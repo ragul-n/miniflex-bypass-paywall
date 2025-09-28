@@ -67,6 +67,11 @@ func (e *EntryPaginationBuilder) WithTags(tags []string) {
 	}
 }
 
+// WithPriority enables priority ordering.
+func (e *EntryPaginationBuilder) WithPriority() {
+	e.priority = true
+}
+
 // WithGloballyVisible adds global visibility to the condition.
 func (e *EntryPaginationBuilder) WithGloballyVisible() {
 	e.conditions = append(e.conditions, "not c.hide_globally")
@@ -108,20 +113,41 @@ func (e *EntryPaginationBuilder) Entries() (*model.Entry, *model.Entry, error) {
 }
 
 func (e *EntryPaginationBuilder) getPrevNextID(tx *sql.Tx) (prevID int64, nextID int64, err error) {
-	cte := `
-		WITH entry_pagination AS (
-			SELECT
-				e.id,
-				lag(e.id) over (order by e.%[1]s asc, e.created_at asc, e.id desc) as prev_id,
-				lead(e.id) over (order by e.%[1]s asc, e.created_at asc, e.id desc) as next_id
-			FROM entries AS e
-			JOIN feeds AS f ON f.id=e.feed_id
-			JOIN categories c ON c.id = f.category_id
-			WHERE %[2]s
-			ORDER BY e.%[1]s asc, e.created_at asc, e.id desc
-		)
-		SELECT prev_id, next_id FROM entry_pagination AS ep WHERE %[3]s;
-	`
+
+	var cte string
+
+	if e.priority {
+		cte := `
+			WITH entry_pagination AS (
+				SELECT
+					e.id,
+					lag(e.id) over (order by e.%[1]s asc, e.created_at asc, e.id desc) as prev_id,
+					lead(e.id) over (order by e.%[1]s asc, e.created_at asc, e.id desc) as next_id
+				FROM entries AS e
+				JOIN feeds AS f ON f.id=e.feed_id
+				JOIN categories c ON c.id = f.category_id
+				WHERE %[2]s
+				ORDER BY e.priority desc, e.%[1]s asc, e.created_at asc, e.id desc
+			)
+			SELECT prev_id, next_id FROM entry_pagination AS ep WHERE %[3]s;
+		`
+	} else {
+		cte := `
+			WITH entry_pagination AS (
+				SELECT
+					e.id,
+					lag(e.id) over (order by e.%[1]s asc, e.created_at asc, e.id desc) as prev_id,
+					lead(e.id) over (order by e.%[1]s asc, e.created_at asc, e.id desc) as next_id
+				FROM entries AS e
+				JOIN feeds AS f ON f.id=e.feed_id
+				JOIN categories c ON c.id = f.category_id
+				WHERE %[2]s
+				ORDER BY e.%[1]s asc, e.created_at asc, e.id desc
+			)
+			SELECT prev_id, next_id FROM entry_pagination AS ep WHERE %[3]s;
+		`
+	}
+
 
 	subCondition := strings.Join(e.conditions, " AND ")
 	finalCondition := fmt.Sprintf("ep.id = $%d", len(e.args)+1)
@@ -167,7 +193,7 @@ func (e *EntryPaginationBuilder) getEntry(tx *sql.Tx, entryID int64) (*model.Ent
 }
 
 // NewEntryPaginationBuilder returns a new EntryPaginationBuilder.
-func NewEntryPaginationBuilder(store *Storage, userID, entryID int64, order, direction string) *EntryPaginationBuilder {
+func NewEntryPaginationBuilder(store *Storage, userID, entryID int64, order, direction string,  ) *EntryPaginationBuilder {
 	return &EntryPaginationBuilder{
 		store:      store,
 		args:       []interface{}{userID, "removed"},
@@ -175,5 +201,6 @@ func NewEntryPaginationBuilder(store *Storage, userID, entryID int64, order, dir
 		entryID:    entryID,
 		order:      order,
 		direction:  direction,
+		priority:   false
 	}
 }

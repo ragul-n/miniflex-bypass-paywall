@@ -5,6 +5,7 @@ package ui // import "miniflux.app/v2/internal/ui"
 
 import (
 	"net/http"
+	"time"
 
 	"miniflux.app/v2/internal/http/request"
 	"miniflux.app/v2/internal/http/response/html"
@@ -33,13 +34,18 @@ func (h *handler) showCategoryEntriesPage(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	n := 5 // last 5 days
+	date := time.Now().AddDate(0, 0, -n)
+
 	offset := request.QueryIntParam(r, "offset", 0)
 	builder := h.store.NewEntryQueryBuilder(user.ID)
 	builder.WithCategoryID(category.ID)
+	builder.WithSorting("priority", "DESC")
 	builder.WithSorting(user.EntryOrder, user.EntryDirection)
 	builder.WithSorting("id", user.EntryDirection)
 	builder.WithStatus(model.EntryStatusUnread)
 	builder.WithOffset(offset)
+	builder.AfterPublishedDate(date)
 	builder.WithLimit(user.EntriesPerPage)
 
 	entries, err := builder.GetEntries()
@@ -49,6 +55,12 @@ func (h *handler) showCategoryEntriesPage(w http.ResponseWriter, r *http.Request
 	}
 
 	count, err := builder.CountEntries()
+	if err != nil {
+		html.ServerError(w, r, err)
+		return
+	}
+
+	categories, err := h.store.CategoriesWithFeedCount(user.ID)
 	if err != nil {
 		html.ServerError(w, r, err)
 		return
@@ -66,6 +78,7 @@ func (h *handler) showCategoryEntriesPage(w http.ResponseWriter, r *http.Request
 	view.Set("countErrorFeeds", h.store.CountUserFeedsWithErrors(user.ID))
 	view.Set("hasSaveEntry", h.store.HasSaveEntry(user.ID))
 	view.Set("showOnlyUnreadEntries", true)
+	view.Set("categories", categories)
 
 	html.OK(w, r, view.Render("category_entries"))
 }

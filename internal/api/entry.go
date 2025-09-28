@@ -131,7 +131,7 @@ func (h *handler) findEntries(w http.ResponseWriter, r *http.Request, feedID int
 	builder.WithFeedID(feedID)
 	builder.WithCategoryID(categoryID)
 	builder.WithStatuses(statuses)
-	builder.WithSorting("priority","DESC")
+	// builder.WithSorting("priority","DESC")
 	builder.WithSorting(order, direction)
 	builder.WithOffset(offset)
 	builder.WithLimit(limit)
