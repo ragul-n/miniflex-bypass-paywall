@@ -38,7 +38,7 @@ const (
 	defaultSchedulerEntryFrequencyFactor      = 1
 	defaultSchedulerRoundRobinMinInterval     = 60
 	defaultSchedulerRoundRobinMaxInterval     = 1440
-	defaultPollingParsingErrorLimit           = 3
+	defaultPollingParsingErrorLimit           = 0
 	defaultRunMigrations                      = false
 	defaultDatabaseURL                        = "user=postgres password=postgres dbname=miniflux2 port=15432 sslmode=disable"
 	defaultDatabaseMaxConns                   = 20
