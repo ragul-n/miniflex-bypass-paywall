@@ -610,5 +610,13 @@
     ],
     "time_elapsed.yesterday": "eilen",
     "tooltip.keyboard_shortcuts": "Pikanäppäin: %s",
-    "tooltip.logged_user": "Kirjautunut %s-käyttäjänä"
+    "tooltip.logged_user": "Kirjautunut %s-käyttäjänä",
+    "error.invalid_display_layout": "Invalid display layout.",
+    "form.prefs.label.display_layout": "Article display layout",
+    "form.prefs.label.display_layout.auto": "Two panes when there is enough space",
+    "form.prefs.label.display_layout.wide": "Always show two panes",
+    "form.prefs.label.display_layout.narrow": "Always show a single pane",
+    "page.split_pane.select_article": "Select an article to read.",
+    "form.feed.label.fetch_from_archive": "Extract content from archive.is",
+    "form.feed.label.fetch_from_original": "Extract content from the original website"
 }

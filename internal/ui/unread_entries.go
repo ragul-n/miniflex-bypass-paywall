@@ -41,7 +41,7 @@ func (h *handler) showUnreadPage(w http.ResponseWriter, r *http.Request) {
 		offset = 0
 	}
 
-	n := 5 // last 5 days
+	n := 3 // last 5 days
 	date := time.Now().AddDate(0, 0, -n)
 
 	beginSqlFetchUnreadEntries := time.Now()

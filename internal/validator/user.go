@@ -104,6 +104,12 @@ func ValidateUserModification(store *storage.Storage, userID int64, changes *mod
 		}
 	}
 
+	if changes.DisplayLayout != nil {
+		if err := validateDisplayLayout(*changes.DisplayLayout); err != nil {
+			return err
+		}
+	}
+
 	if changes.DefaultReadingSpeed != nil {
 		if err := validateReadingSpeed(*changes.DefaultReadingSpeed); err != nil {
 			return err
@@ -243,6 +249,13 @@ func validateDisplayMode(displayMode string) *locale.LocalizedError {
 func validateGestureNav(gestureNav string) *locale.LocalizedError {
 	if gestureNav != "none" && gestureNav != "tap" && gestureNav != "swipe" {
 		return locale.NewLocalizedError("error.invalid_gesture_nav")
+	}
+	return nil
+}
+
+func validateDisplayLayout(displayLayout string) *locale.LocalizedError {
+	if displayLayout != "auto" && displayLayout != "wide" && displayLayout != "narrow" {
+		return locale.NewLocalizedError("error.invalid_display_layout")
 	}
 	return nil
 }

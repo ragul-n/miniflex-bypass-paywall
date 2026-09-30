@@ -47,6 +47,7 @@ func (h *handler) showSettingsPage(w http.ResponseWriter, r *http.Request) {
 		BlockFilterEntryRules:   user.BlockFilterEntryRules,
 		KeepFilterEntryRules:    user.KeepFilterEntryRules,
 		AlwaysOpenExternalLinks: user.AlwaysOpenExternalLinks,
+		DisplayLayout:           user.DisplayLayout,
 	}
 
 	timezones, err := h.store.Timezones()

@@ -117,6 +117,7 @@
     "error.invalid_categories_sorting_order": "Invalid categories sorting order.",
     "error.invalid_default_home_page": "Invalid default homepage!",
     "error.invalid_display_mode": "Invalid web app display mode.",
+    "error.invalid_display_layout": "Invalid display layout.",
     "error.invalid_entry_direction": "Invalid entry direction.",
     "error.invalid_entry_order": "Invalid entry order.",
     "error.invalid_feed_proxy_url": "Invalid proxy URL.",
@@ -337,6 +338,10 @@
     "form.prefs.label.default_home_page": "Default home page",
     "form.prefs.label.default_reading_speed": "Reading speed for other languages (words per minute)",
     "form.prefs.label.display_mode": "Progressive Web App (PWA) display mode",
+    "form.prefs.label.display_layout": "Article display layout",
+    "form.prefs.label.display_layout.auto": "Two panes when there is enough space",
+    "form.prefs.label.display_layout.wide": "Always show two panes",
+    "form.prefs.label.display_layout.narrow": "Always show a single pane",
     "form.prefs.label.entries_per_page": "Entries per page",
     "form.prefs.label.entry_order": "Entry sorting column",
     "form.prefs.label.entry_sorting": "Entry sorting",
@@ -549,6 +554,7 @@
     "page.settings.webauthn.register": "Register passkey",
     "page.settings.webauthn.register.error": "Unable to register passkey",
     "page.shared_entries.title": "Shared entries",
+    "page.split_pane.select_article": "Select an article to read.",
     "page.shared_entries_count": [
         "%d shared entry",
         "%d shared entries"

@@ -1,3 +1,79 @@
+function wirePage(root) {
+    root = root || document;
+
+    onClick(":is(a, button)[data-save-entry]", (event) => handleSaveEntry(event.target), false, root);
+    onClick(":is(a, button)[data-toggle-bookmark]", (event) => handleBookmark(event.target), false, root);
+    onClick(":is(a, button)[data-fetch-content-entry]", handleFetchOriginalContent, false, root);
+    onClick(":is(a, button)[data-share-status]", handleShare, false, root);
+    onClick(":is(a, button)[data-action=markPageAsRead]", (event) => handleConfirmationMessage(event.target, markPageAsRead), false, root);
+    onClick(":is(a, button)[data-toggle-status]", (event) => handleEntryStatus("next", event.target), false, root);
+    onClick(":is(a, button)[data-confirm]", (event) => handleConfirmationMessage(event.target, (url, redirectURL) => {
+        const request = new RequestBuilder(url);
+
+        request.withCallback((response) => {
+            if (redirectURL) {
+                window.location.href = redirectURL;
+            } else if (response && response.redirected && response.url) {
+                window.location.href = response.url;
+            } else {
+                window.location.reload();
+            }
+        });
+
+        request.execute();
+    }), false, root);
+
+    onClick("a[data-original-link='true']", (event) => {
+        handleEntryStatus("next", event.target, true);
+    }, true, root);
+    onAuxClick("a[data-original-link='true']", (event) => {
+        if (event.button === 1) {
+            handleEntryStatus("next", event.target, true);
+        }
+    }, true, root);
+
+    // Prev/next navigation inside the split-pane article stays in the pane.
+    onClick(
+        ".entry-pane :is(a, button)[data-page=previous], .entry-pane :is(a, button)[data-page=next]",
+        handleSplitPanePageLinkClick,
+        true,
+        root
+    );
+
+    fixVoiceOverDetailsSummaryBug(root);
+
+    // Save and resume media position
+    const lastPositionElements = root.querySelectorAll("audio[data-last-position],video[data-last-position]");
+    lastPositionElements.forEach((element) => {
+        if (element.dataset.lastPosition) {
+            element.currentTime = element.dataset.lastPosition;
+        }
+        element.ontimeupdate = () => handlePlayerProgressionSaveAndMarkAsReadOnCompletion(element);
+    });
+
+    // Set media playback rate
+    const playbackRateElements = root.querySelectorAll("audio[data-playback-rate],video[data-playback-rate]");
+    playbackRateElements.forEach((element) => {
+        if (element.dataset.playbackRate) {
+            element.playbackRate = element.dataset.playbackRate;
+            if (element.dataset.enclosureId){
+                // In order to display properly the speed we need to do it on bootstrap.
+                // Could not do it backend side because I didn't know how to do it because of the template inclusion and
+                // the way the initial playback speed is handled. See enclosure_media_controls.html if you want to try to fix this
+                root.querySelectorAll(`span.speed-indicator[data-enclosure-id="${element.dataset.enclosureId}"]`).forEach((speedI)=>{
+                    speedI.innerText = `${parseFloat(element.dataset.playbackRate).toFixed(2)}x`;
+                });
+            }
+        }
+    });
+
+    // Set enclosure media controls handlers
+    const mediaControlsElements = root.querySelectorAll("button[data-enclosure-action]");
+    mediaControlsElements.forEach((element) => {
+        element.addEventListener("click", () => handleMediaControl(element));
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     handleSubmitButtons();
 
@@ -49,7 +125,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const touchHandler = new TouchHandler();
-    touchHandler.listen();
+    touchHandler.bind(document);
+
+    wirePage(document);
 
     if (WebAuthnHandler.isWebAuthnSupported()) {
         const webauthnHandler = new WebAuthnHandler();
@@ -82,41 +160,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    onClick(":is(a, button)[data-save-entry]", (event) => handleSaveEntry(event.target));
-    onClick(":is(a, button)[data-toggle-bookmark]", (event) => handleBookmark(event.target));
-    onClick(":is(a, button)[data-fetch-content-entry]", handleFetchOriginalContent);
-    onClick(":is(a, button)[data-share-status]", handleShare);
-    onClick(":is(a, button)[data-action=markPageAsRead]", (event) => handleConfirmationMessage(event.target, markPageAsRead));
-    onClick(":is(a, button)[data-toggle-status]", (event) => handleEntryStatus("next", event.target));
-    onClick(":is(a, button)[data-confirm]", (event) => handleConfirmationMessage(event.target, (url, redirectURL) => {
-        const request = new RequestBuilder(url);
-
-        request.withCallback((response) => {
-            if (redirectURL) {
-                window.location.href = redirectURL;
-            } else if (response && response.redirected && response.url) {
-                window.location.href = response.url;
-            } else {
-                window.location.reload();
-            }
-        });
-
-        request.execute();
-    }));
-
-    onClick("a[data-original-link='true']", (event) => {
-        handleEntryStatus("next", event.target, true);
-    }, true);
-    onAuxClick("a[data-original-link='true']", (event) => {
-        if (event.button === 1) {
-            handleEntryStatus("next", event.target, true);
-        }
-    }, true);
+    // Open entries in the right pane when the split-pane layout is active.
+    onClick(".item-title a", handleSplitPaneItemClick, true);
 
     checkMenuToggleModeByLayout();
     window.addEventListener("resize", checkMenuToggleModeByLayout, { passive: true });
-
-    fixVoiceOverDetailsSummaryBug();
 
     const logoElement = document.querySelector(".logo");
     if (logoElement) {
@@ -153,34 +201,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Save and resume media position
-    const lastPositionElements = document.querySelectorAll("audio[data-last-position],video[data-last-position]");
-    lastPositionElements.forEach((element) => {
-        if (element.dataset.lastPosition) {
-            element.currentTime = element.dataset.lastPosition;
-        }
-        element.ontimeupdate = () => handlePlayerProgressionSaveAndMarkAsReadOnCompletion(element);
-    });
-
-    // Set media playback rate
-    const playbackRateElements = document.querySelectorAll("audio[data-playback-rate],video[data-playback-rate]");
-    playbackRateElements.forEach((element) => {
-        if (element.dataset.playbackRate) {
-            element.playbackRate = element.dataset.playbackRate;
-            if (element.dataset.enclosureId){
-                // In order to display properly the speed we need to do it on bootstrap.
-                // Could not do it backend side because I didn't know how to do it because of the template inclusion and
-                // the way the initial playback speed is handled. See enclosure_media_controls.html if you want to try to fix this
-                document.querySelectorAll(`span.speed-indicator[data-enclosure-id="${element.dataset.enclosureId}"]`).forEach((speedI)=>{
-                    speedI.innerText = `${parseFloat(element.dataset.playbackRate).toFixed(2)}x`;
-                });
-            }
-        }
-    });
-
-    // Set enclosure media controls handlers
-    const mediaControlsElements = document.querySelectorAll("button[data-enclosure-action]");
-    mediaControlsElements.forEach((element) => {
-        element.addEventListener("click", () => handleMediaControl(element));
-    });
+    initSplitPane();
 });

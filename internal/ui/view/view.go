@@ -28,6 +28,9 @@ func (v *View) Set(param string, value interface{}) *View {
 
 // Render executes the template with arguments.
 func (v *View) Render(template string) []byte {
+	if request.HasQueryParam(v.r, "partial") {
+		return v.tpl.RenderPartial(template+".html", v.params)
+	}
 	return v.tpl.Render(template+".html", v.params)
 }
 

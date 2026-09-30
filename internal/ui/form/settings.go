@@ -53,6 +53,7 @@ type SettingsForm struct {
 	BlockFilterEntryRules   string
 	KeepFilterEntryRules    string
 	AlwaysOpenExternalLinks bool
+	DisplayLayout           string
 }
 
 // MarkAsReadBehavior returns the MarkReadBehavior from the given MarkReadOnView and MarkReadOnMediaPlayerCompletion values.
@@ -116,6 +117,7 @@ func (s *SettingsForm) Merge(user *model.User) *model.User {
 	user.BlockFilterEntryRules = s.BlockFilterEntryRules
 	user.KeepFilterEntryRules = s.KeepFilterEntryRules
 	user.AlwaysOpenExternalLinks = s.AlwaysOpenExternalLinks
+	user.DisplayLayout = s.DisplayLayout
 
 	MarkReadOnView, MarkReadOnMediaPlayerCompletion := ExtractMarkAsReadBehavior(s.MarkReadBehavior)
 	user.MarkReadOnView = MarkReadOnView
@@ -157,6 +159,10 @@ func (s *SettingsForm) Validate() *locale.LocalizedError {
 		if !validator.IsValidDomainList(s.ExternalFontHosts) {
 			return locale.NewLocalizedError("error.settings_invalid_domain_list")
 		}
+	}
+
+	if s.DisplayLayout != "auto" && s.DisplayLayout != "wide" && s.DisplayLayout != "narrow" {
+		return locale.NewLocalizedError("error.invalid_display_layout")
 	}
 
 	return nil
@@ -208,5 +214,6 @@ func NewSettingsForm(r *http.Request) *SettingsForm {
 		BlockFilterEntryRules:   r.FormValue("block_filter_entry_rules"),
 		KeepFilterEntryRules:    r.FormValue("keep_filter_entry_rules"),
 		AlwaysOpenExternalLinks: r.FormValue("always_open_external_links") == "1",
+		DisplayLayout:           r.FormValue("display_layout"),
 	}
 }

@@ -42,6 +42,7 @@ type User struct {
 	BlockFilterEntryRules           string     `json:"block_filter_entry_rules"`
 	KeepFilterEntryRules            string     `json:"keep_filter_entry_rules"`
 	AlwaysOpenExternalLinks         bool       `json:"always_open_external_links"`
+	DisplayLayout                   string     `json:"display_layout"`
 }
 
 // UserCreationRequest represents the request to create a user.
@@ -84,6 +85,7 @@ type UserModificationRequest struct {
 	BlockFilterEntryRules           *string  `json:"block_filter_entry_rules"`
 	KeepFilterEntryRules            *string  `json:"keep_filter_entry_rules"`
 	AlwaysOpenExternalLinks         *bool    `json:"always_open_external_links"`
+	DisplayLayout                   *string  `json:"display_layout"`
 }
 
 // Patch updates the User object with the modification request.
@@ -202,6 +204,10 @@ func (u *UserModificationRequest) Patch(user *User) {
 
 	if u.AlwaysOpenExternalLinks != nil {
 		user.AlwaysOpenExternalLinks = *u.AlwaysOpenExternalLinks
+	}
+
+	if u.DisplayLayout != nil {
+		user.DisplayLayout = *u.DisplayLayout
 	}
 }
 

@@ -58,6 +58,7 @@ if user.AlwaysOpenExternalLinks {
 
 	entryPaginationBuilder := storage.NewEntryPaginationBuilder(h.store, user.ID, entry.ID, user.EntryOrder, user.EntryDirection)
 	entryPaginationBuilder.WithFeedID(feedID)
+
 	prevEntry, nextEntry, err := entryPaginationBuilder.Entries()
 	if err != nil {
 		html.ServerError(w, r, err)

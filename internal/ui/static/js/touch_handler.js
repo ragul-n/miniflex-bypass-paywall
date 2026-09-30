@@ -135,7 +135,7 @@ class TouchHandler {
         const now = Date.now();
 
         if (this.touch.start.x !== -1 && now - this.touch.time <= 200) {
-            const innerWidthHalf = window.innerWidth / 2;
+            const innerWidthHalf = this.tapNavigationMidpoint();
 
             if (this.touch.start.x >= innerWidthHalf && event.changedTouches[0].clientX >= innerWidthHalf) {
                 goToPage("next");
@@ -151,17 +151,29 @@ class TouchHandler {
         }
     }
 
-    listen() {
+    tapNavigationMidpoint() {
+        // In split-pane mode, gesture navigation applies to the article pane only,
+        // so the previous/next tap zones are computed from the pane's own boundaries
+        // instead of the full window width.
+        const entryPane = document.getElementById("entry-pane");
+        if (entryPane !== null && entryPane.querySelector(".entry") !== null) {
+            const rect = entryPane.getBoundingClientRect();
+            return rect.left + rect.width / 2;
+        }
+        return window.innerWidth / 2;
+    }
+
+    bind(root = document) {
         const eventListenerOptions = { passive: true };
 
-        document.querySelectorAll(".entry-swipe").forEach((element) => {
+        root.querySelectorAll(".entry-swipe").forEach((element) => {
             element.addEventListener("touchstart", (e) => this.onItemTouchStart(e), eventListenerOptions);
             element.addEventListener("touchmove", (e) => this.onItemTouchMove(e));
             element.addEventListener("touchend", (e) => this.onItemTouchEnd(e), eventListenerOptions);
             element.addEventListener("touchcancel", () => this.reset(), eventListenerOptions);
         });
 
-        const element = document.querySelector(".entry-content");
+        const element = root.querySelector(".entry-content");
         if (element) {
             if (element.classList.contains("gesture-nav-tap")) {
                 element.addEventListener("touchend", (e) => this.onTapEnd(e), eventListenerOptions);

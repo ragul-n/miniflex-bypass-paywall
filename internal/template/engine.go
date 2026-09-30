@@ -102,6 +102,15 @@ func (e *Engine) ParseTemplates() error {
 
 // Render process a template.
 func (e *Engine) Render(name string, data map[string]interface{}) []byte {
+	return e.render(name, data, "base")
+}
+
+// RenderPartial process a template without the HTML layout.
+func (e *Engine) RenderPartial(name string, data map[string]interface{}) []byte {
+	return e.render(name, data, "base_partial")
+}
+
+func (e *Engine) render(name string, data map[string]interface{}, templateName string) []byte {
 	tpl, ok := e.templates[name]
 	if !ok {
 		panic("This template does not exists: " + name)
@@ -130,7 +139,7 @@ func (e *Engine) Render(name string, data map[string]interface{}) []byte {
 	})
 
 	var b bytes.Buffer
-	err := tpl.ExecuteTemplate(&b, "base", data)
+	err := tpl.ExecuteTemplate(&b, templateName, data)
 	if err != nil {
 		panic(err)
 	}

@@ -1293,3 +1293,85 @@ audio, video {
 .hidden {
     display: none;
 }
+
+/* Split-pane reader layout (article list left, article right) */
+@media (min-width: 1100px) {
+    body.split-pane {
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    body.split-pane > .header {
+        flex: none;
+        margin-bottom: 8px;
+    }
+
+    body.split-pane > .flash-message,
+    body.split-pane > .flash-error-message {
+        flex: none;
+    }
+
+    body.split-pane #main {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+        column-gap: 14px;
+        overflow: hidden;
+        margin-bottom: 0;
+        padding-block-end: 8px;
+    }
+
+    body.split-pane .split-list,
+    body.split-pane .entry-pane {
+        min-width: 0;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+
+    body.split-pane .split-list {
+        padding-inline-end: 8px;
+    }
+
+    body.split-pane .split-list .page-header {
+        padding-inline: 0;
+    }
+
+    body.split-pane .entry-pane {
+        padding-block-start: 12px;
+        padding-inline: 2px 6px;
+        touch-action: pan-y;
+        border-inline-start: 1px dotted var(--page-header-title-border-color);
+    }
+
+    body.split-pane .entry-pane .entry-content {
+        max-width: 72ch;
+    }
+
+    .entry-pane-empty {
+        height: 100%;
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--item-meta-li-color);
+        font-style: italic;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    body.split-pane .entry-pane .pagination-entry-top {
+        display: none;
+    }
+
+    body.split-pane .entry-pane .pagination-entry-bottom {
+        margin-block: 12px;
+    }
+}

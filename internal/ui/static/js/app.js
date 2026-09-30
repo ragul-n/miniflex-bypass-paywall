@@ -29,6 +29,24 @@ function getVisibleElements(selector) {
  * @param {boolean} evenIfOnScreen
  */
 function scrollPageTo(element, evenIfOnScreen) {
+    if (splitPaneActive()) {
+        const container = document.querySelector(".split-list");
+        if (container && container.contains(element)) {
+            const containerTop = container.getBoundingClientRect().top;
+            const itemTop = element.getBoundingClientRect().top - containerTop;
+            const itemBottom = itemTop + element.offsetHeight;
+            const viewportBottom = container.scrollTop + container.clientHeight;
+
+            if (evenIfOnScreen || viewportBottom - itemBottom < 0 || itemTop < container.scrollTop) {
+                container.scrollTo({
+                    top: container.scrollTop + itemTop - container.clientHeight / 2,
+                    behavior: "smooth",
+                });
+            }
+            return;
+        }
+    }
+
     const windowScrollPosition = window.scrollY;
     const windowHeight = document.documentElement.clientHeight;
     const viewportPosition = windowScrollPosition + windowHeight;
@@ -40,8 +58,8 @@ function scrollPageTo(element, evenIfOnScreen) {
 }
 
 // OnClick attaches a listener to the elements that match the selector.
-function onClick(selector, callback, noPreventDefault) {
-    document.querySelectorAll(selector).forEach((element) => {
+function onClick(selector, callback, noPreventDefault, root = document) {
+    root.querySelectorAll(selector).forEach((element) => {
         element.onclick = (event) => {
             if (!noPreventDefault) {
                 event.preventDefault();
@@ -51,8 +69,8 @@ function onClick(selector, callback, noPreventDefault) {
     });
 }
 
-function onAuxClick(selector, callback, noPreventDefault) {
-    document.querySelectorAll(selector).forEach((element) => {
+function onAuxClick(selector, callback, noPreventDefault, root = document) {
+    root.querySelectorAll(selector).forEach((element) => {
         element.onauxclick = (event) => {
             if (!noPreventDefault) {
                 event.preventDefault();
@@ -87,9 +105,12 @@ function checkMenuToggleModeByLayout() {
     }
 }
 
-function fixVoiceOverDetailsSummaryBug() {
-    document.querySelectorAll("details").forEach((details) => {
-        const summaryElement = details.querySelector("summary");
+function fixVoiceOverDetailsSummaryBug(root = document) {
+    root.querySelectorAll("details").forEach((details) => {
+        const summaryElement = details.querySelector("summary") || details.querySelector(':scope > summary:first-of-type');
+        if (!summaryElement) {
+            return;
+        }
         summaryElement.setAttribute("role", "button");
         summaryElement.setAttribute("aria-expanded", details.open? "true": "false");
 
@@ -170,6 +191,13 @@ function markPageAsRead() {
             let showOnlyUnread = false;
             if (element) {
                 showOnlyUnread = element.dataset.showOnlyUnread || false;
+            }
+
+            if (splitPaneActive()) {
+                // In split-pane mode, avoid a full navigation: the read items
+                // are hidden client-side and the unread counter is updated by
+                // the Ajax response.
+                return;
             }
 
             if (showOnlyUnread) {
@@ -373,15 +401,13 @@ function toggleBookmark(parentElement, toasting) {
 }
 
 // Send the Ajax request to download the original web page.
-function handleFetchOriginalContent() {
-    if (isListView()) {
-        return;
-    }
-
-    const buttonElement = document.querySelector(":is(a, button)[data-fetch-content-entry]");
+function handleFetchOriginalContent(event) {
+    const buttonElement = event && event.currentTarget ? event.currentTarget : document.querySelector(":is(a, button)[data-fetch-content-entry]");
     if (!buttonElement) {
         return;
     }
+
+    const scope = buttonElement.closest("#entry-pane") || document;
 
     const previousElement = buttonElement.cloneNode(true);
 
@@ -395,8 +421,12 @@ function handleFetchOriginalContent() {
 
         response.json().then((data) => {
             if (data.hasOwnProperty("content") && data.hasOwnProperty("reading_time")) {
-                document.querySelector(".entry-content").innerHTML = ttpolicy.createHTML(data.content);
-                const entryReadingtimeElement = document.querySelector(".entry-reading-time");
+                const entryContent = scope.querySelector(".entry-content");
+                if (!entryContent) {
+                    return;
+                }
+                entryContent.innerHTML = ttpolicy.createHTML(data.content);
+                const entryReadingtimeElement = scope.querySelector(".entry-reading-time");
                 if (entryReadingtimeElement) {
                     entryReadingtimeElement.textContent = data.reading_time;
                 }
@@ -431,14 +461,12 @@ function openOriginalLink(openLinkInCurrentTab) {
 }
 
 function openCommentLink(openLinkInCurrentTab) {
-    if (!isListView()) {
-        const entryLink = document.querySelector(":is(a, button)[data-comments-link]");
-        if (entryLink !== null) {
-            if (openLinkInCurrentTab) {
-                window.location.href = entryLink.getAttribute("href");
-            } else {
-                openNewTab(entryLink.getAttribute("href"));
-            }
+    const entryLink = document.querySelector(".entry :is(a, button)[data-comments-link]");
+    if (entryLink !== null) {
+        if (openLinkInCurrentTab) {
+            window.location.href = entryLink.getAttribute("href");
+        } else {
+            openNewTab(entryLink.getAttribute("href"));
         }
     } else {
         const currentItemCommentsLink = document.querySelector(".current-item :is(a, button)[data-comments-link]");
@@ -451,7 +479,11 @@ function openCommentLink(openLinkInCurrentTab) {
 function openSelectedItem() {
     const currentItemLink = document.querySelector(".current-item .item-title a");
     if (currentItemLink !== null) {
-        window.location.href = currentItemLink.getAttribute("href");
+        if (splitPaneActive()) {
+            openEntryInPane(currentItemLink.getAttribute("href"), { pushState: true });
+        } else {
+            window.location.href = currentItemLink.getAttribute("href");
+        }
     }
 }
 
@@ -477,10 +509,19 @@ function unsubscribeFromFeed() {
  * @param {boolean} fallbackSelf Refresh actual page if the page is not found.
  */
 function goToPage(page, fallbackSelf = false) {
-    const element = document.querySelector(":is(a, button)[data-page=" + page + "]");
+    const entryPane = document.getElementById("entry-pane");
+    const entryPaneHasEntry = entryPane !== null && splitPaneActive() && entryPane.querySelector(".entry") !== null;
+
+    const element = entryPaneHasEntry
+        ? entryPane.querySelector(":is(a, button)[data-page=" + page + "]")
+        : document.querySelector(":is(a, button)[data-page=" + page + "]");
 
     if (element) {
-        document.location.href = element.href;
+        if (splitPaneActive() && entryPane !== null && entryPane.contains(element)) {
+            openEntryInPane(element.href, { pushState: true });
+        } else {
+            document.location.href = element.href;
+        }
     } else if (fallbackSelf) {
         window.location.reload();
     }
@@ -627,10 +668,17 @@ function isListView() {
 }
 
 function findEntry(element) {
-    if (isListView()) {
-        if (element) {
-            return element.closest(".item");
+    if (element) {
+        const entry = element.closest(".entry");
+        if (entry) {
+            return entry;
         }
+        const item = element.closest(".item");
+        if (item) {
+            return item;
+        }
+    }
+    if (isListView()) {
         return document.querySelector(".current-item");
     }
     return document.querySelector(".entry");

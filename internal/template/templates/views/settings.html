@@ -207,6 +207,13 @@
 
         <label><input type="checkbox" name="entry_swipe" value="1" {{ if .form.EntrySwipe }}checked{{ end }}> {{ t "form.prefs.label.entry_swipe" }}</label>
 
+        <label for="form-display-layout">{{ t "form.prefs.label.display_layout" }}</label>
+        <select id="form-display-layout" name="display_layout">
+            <option value="auto" {{ if eq "auto" $.form.DisplayLayout }}selected="selected"{{ end }}>{{ t "form.prefs.label.display_layout.auto" }}</option>
+            <option value="wide" {{ if eq "wide" $.form.DisplayLayout }}selected="selected"{{ end }}>{{ t "form.prefs.label.display_layout.wide" }}</option>
+            <option value="narrow" {{ if eq "narrow" $.form.DisplayLayout }}selected="selected"{{ end }}>{{ t "form.prefs.label.display_layout.narrow" }}</option>
+        </select>
+
         <label><input type="checkbox" name="always_open_external_links" value="1" {{ if .form.AlwaysOpenExternalLinks }}checked{{ end }}> {{ t "form.prefs.label.always_open_external_links" }}</label>
 
         <label for="form-custom-css">{{t "form.prefs.label.custom_css" }}</label>

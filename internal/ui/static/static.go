@@ -119,6 +119,7 @@ func GenerateJavascriptBundles() error {
 			"js/request_builder.js",
 			"js/modal_handler.js",
 			"js/app.js",
+			"js/split_pane.js",
 			"js/webauthn_handler.js",
 			"js/bootstrap.js",
 		},
