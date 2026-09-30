@@ -64,6 +64,7 @@
     data-webauthn-login-finish-url="{{ route "webauthnLoginFinish" }}"
     data-webauthn-delete-all-url="{{ route "webauthnDeleteAll" }}"
     {{ end }}
+    {{ if .menu }}data-page="{{ .menu }}"{{ end }}
     {{ if .user }}{{ if not .user.KeyboardShortcuts }}data-disable-keyboard-shortcuts="true"{{ end }}{{ end }}
     {{ if .user }}data-display-layout="{{ .user.DisplayLayout }}"{{ end }}
     data-split-pane-placeholder="{{ t "page.split_pane.select_article" }}">

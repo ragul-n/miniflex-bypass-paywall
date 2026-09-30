@@ -111,6 +111,15 @@ function ensureSplitStructure() {
     }
     main.appendChild(splitList);
 
+    // The unread section hides its page header (title + actions) in the
+    // two-pane layout. Hidden in JS so it cannot be overridden by user CSS.
+    if (document.body.dataset.page === "unread") {
+        const listHeader = splitList.querySelector(".page-header");
+        if (listHeader) {
+            listHeader.style.display = "none";
+        }
+    }
+
     const pane = document.createElement("div");
     pane.className = "entry-pane";
     pane.id = "entry-pane";
@@ -131,6 +140,10 @@ function removeSplitStructure() {
 
     const splitList = getSplitList();
     if (splitList) {
+        const listHeader = splitList.querySelector(".page-header");
+        if (listHeader) {
+            listHeader.style.display = "";
+        }
         while (splitList.firstChild) {
             main.insertBefore(splitList.firstChild, splitList);
         }

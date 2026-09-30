@@ -1,5 +1,5 @@
 APP             := miniflux
-DOCKER_IMAGE    := miniflux/miniflux-bypass-paywall
+DOCKER_IMAGE    := nragul/miniflux-bypass-paywall
 VERSION         := $(shell git describe --tags --abbrev=0 2>/dev/null)
 COMMIT          := $(shell git rev-parse --short HEAD 2>/dev/null)
 BUILD_DATE      := `date +%FT%T%z`

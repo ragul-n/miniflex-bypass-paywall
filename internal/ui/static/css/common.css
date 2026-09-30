@@ -891,6 +891,13 @@ template {
     display: none;
 }
 
+.categories-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block-end: 1rem;
+}
+
 .entry-swipe {
     transition-property: transform;
     transition-duration: 0s;
@@ -1320,8 +1327,8 @@ audio, video {
         flex: 1;
         min-height: 0;
         display: grid;
-        grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
-        column-gap: 14px;
+        grid-template-columns: minmax(0, 34fr) minmax(0, 66fr);
+        column-gap: 18px;
         overflow: hidden;
         margin-bottom: 0;
         padding-block-end: 8px;
@@ -1337,7 +1344,26 @@ audio, video {
     }
 
     body.split-pane .split-list {
-        padding-inline-end: 8px;
+        padding-inline: 20px 4px;
+    }
+
+    /* Categories bar sticks to the top of the left column only, so it never
+       pushes the article pane down. */
+    body.split-pane .split-list .categories-container {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: var(--body-background);
+        margin-block-end: 10px;
+        padding-block: 6px;
+        padding-inline: 0;
+        border-block-end: 1px dotted var(--page-header-title-border-color);
+    }
+
+    /* The unread list starts directly with its articles: hide its page header
+       (title + actions) in the two-pane layout. Other sections keep it. */
+    body.split-pane[data-page="unread"] .split-list .page-header {
+        display: none;
     }
 
     body.split-pane .split-list .page-header {
@@ -1345,8 +1371,7 @@ audio, video {
     }
 
     body.split-pane .entry-pane {
-        padding-block-start: 12px;
-        padding-inline: 2px 6px;
+        padding-inline: 20px 8px;
         touch-action: pan-y;
         border-inline-start: 1px dotted var(--page-header-title-border-color);
     }
